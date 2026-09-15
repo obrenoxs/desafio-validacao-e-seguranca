@@ -7,6 +7,8 @@ import com.devsuperior.bds04.repositories.CityRepository;
 import com.devsuperior.bds04.repositories.EventRepository;
 import com.devsuperior.bds04.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +35,11 @@ public class EventService {
 
         event = eventRepository.save(event);
         return new EventDTO(event);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EventDTO> findAll(Pageable pageable) {
+        Page<Event> page = eventRepository.findAll(pageable);
+        return page.map(x -> new EventDTO(x));
     }
 }
